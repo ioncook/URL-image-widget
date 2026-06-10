@@ -4,8 +4,8 @@
         "source": "/home/ionc/.gradle/daemon/8.5/com.example.urlimagewidget.app-main-41:/drawable/widget_background.xml"
     },
     {
-        "merged": "com.example.urlimagewidget.app-merged_res-39:/xml_image_widget_info_4.xml.flat",
-        "source": "com.example.urlimagewidget.app-main-41:/xml/image_widget_info_4.xml"
+        "merged": "com.example.urlimagewidget.app-merged_res-39:/drawable_widget_inner_background.xml.flat",
+        "source": "com.example.urlimagewidget.app-main-41:/drawable/widget_inner_background.xml"
     },
     {
         "merged": "/home/ionc/.gradle/daemon/8.5/com.example.urlimagewidget.app-merged_res-39:/layout_activity_main.xml.flat",
@@ -64,8 +64,20 @@
         "source": "/home/ionc/.gradle/daemon/8.5/com.example.urlimagewidget.app-main-41:/layout/activity_blur.xml"
     },
     {
-        "merged": "com.example.urlimagewidget.app-merged_res-39:/xml_image_widget_info_2.xml.flat",
-        "source": "com.example.urlimagewidget.app-main-41:/xml/image_widget_info_2.xml"
+        "merged": "/home/ionc/.gradle/daemon/8.5/com.example.urlimagewidget.app-merged_res-39:/xml_image_widget_info_2.xml.flat",
+        "source": "/home/ionc/.gradle/daemon/8.5/com.example.urlimagewidget.app-main-41:/xml/image_widget_info_2.xml"
+    },
+    {
+        "merged": "/home/ionc/.gradle/daemon/8.5/com.example.urlimagewidget.app-merged_res-39:/xml_image_widget_info_3.xml.flat",
+        "source": "/home/ionc/.gradle/daemon/8.5/com.example.urlimagewidget.app-main-41:/xml/image_widget_info_3.xml"
+    },
+    {
+        "merged": "com.example.urlimagewidget.app-merged_res-39:/drawable_widget_background.xml.flat",
+        "source": "com.example.urlimagewidget.app-main-41:/drawable/widget_background.xml"
+    },
+    {
+        "merged": "/home/ionc/.gradle/daemon/8.5/com.example.urlimagewidget.app-merged_res-39:/xml_image_widget_info_4.xml.flat",
+        "source": "/home/ionc/.gradle/daemon/8.5/com.example.urlimagewidget.app-main-41:/xml/image_widget_info_4.xml"
     },
     {
         "merged": "/home/ionc/.gradle/daemon/8.5/com.example.urlimagewidget.app-merged_res-39:/layout_activity_configuration.xml.flat",
@@ -78,9 +90,5 @@
     {
         "merged": "/home/ionc/.gradle/daemon/8.5/com.example.urlimagewidget.app-merged_res-39:/layout_layout_action_bar.xml.flat",
         "source": "/home/ionc/.gradle/daemon/8.5/com.example.urlimagewidget.app-main-41:/layout/layout_action_bar.xml"
-    },
-    {
-        "merged": "com.example.urlimagewidget.app-merged_res-39:/xml_image_widget_info_3.xml.flat",
-        "source": "com.example.urlimagewidget.app-main-41:/xml/image_widget_info_3.xml"
     }
 ]

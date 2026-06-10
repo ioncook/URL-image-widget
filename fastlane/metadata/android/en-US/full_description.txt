@@ -1,0 +1,9 @@
+A clean, modern, and lightweight Android widget that allows you to display and auto-refresh images from any custom URL directly on your home screen.
+
+Features:
+- Stream and update images in the background using WorkManager.
+- Supports grid dimension custom aspect ratios (3x2, 2x2, 5x2, etc.).
+- Image layout scaling adjustments (Stretch, Crop, Fill).
+- Adaptive launcher icons with Material themed monochrome stencils.
+- Customized frame borders (Dark, Light, Custom Hex color wheel picker).
+- Feathered blur overlays to obscure background details with zero-halo edge blending.

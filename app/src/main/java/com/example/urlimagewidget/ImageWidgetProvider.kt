@@ -172,9 +172,6 @@ open class ImageWidgetProvider : AppWidgetProvider() {
             val paddingDp = if (frameStyle == "Off" || fitStyle == "Fill") 0 else storedPadding
             val paddingPx = (paddingDp * density).toInt()
 
-            // Apply dynamic padding
-            views.setViewPadding(R.id.widget_container, paddingPx, paddingPx, paddingPx, paddingPx)
-
             // Apply dynamic background color tint
             var frameColor = Color.TRANSPARENT
             if (fitStyle != "Fill") {
@@ -204,16 +201,46 @@ open class ImageWidgetProvider : AppWidgetProvider() {
                 }
             }
 
-            // Remove inner container background to prevent white gaps behind the rounded corners of the image
-            views.setInt(R.id.widget_image_container, "setBackgroundResource", 0)
+            val isMoto = android.os.Build.MANUFACTURER.lowercase().contains("motorola") ||
+                         android.os.Build.BRAND.lowercase().contains("moto")
+            val outerRadiusPx = if (isMoto) {
+                16f * density
+            } else if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                val resId = context.resources.getIdentifier("system_app_widget_background_radius", "dimen", "android")
+                if (resId != 0) context.resources.getDimension(resId) else 16f * density
+            } else {
+                16f * density
+            }
+
+            val innerRadiusPx = if (frameStyle == "Off" || fitStyle == "Fill") {
+                outerRadiusPx
+            } else {
+                (outerRadiusPx - paddingPx).coerceAtLeast(0f)
+            }
 
             if (frameStyle == "Off" || fitStyle == "Fill") {
                 // Remove background completely for Off style or Fill style
                 views.setInt(R.id.widget_container, "setBackgroundResource", 0)
+                // Use the outer background shape to define the outer corner rounding path for the image container
+                views.setInt(R.id.widget_image_container, "setBackgroundResource", R.drawable.widget_background)
+                views.setColorStateList(R.id.widget_image_container, "setBackgroundTintList", ColorStateList.valueOf(Color.TRANSPARENT))
             } else {
                 views.setInt(R.id.widget_container, "setBackgroundResource", R.drawable.widget_background)
                 views.setColorStateList(R.id.widget_container, "setBackgroundTintList", ColorStateList.valueOf(frameColor))
+                // Use the inner background shape to define the inner corner rounding path for the image container
+                views.setInt(R.id.widget_image_container, "setBackgroundResource", R.drawable.widget_inner_background)
+                views.setColorStateList(R.id.widget_image_container, "setBackgroundTintList", ColorStateList.valueOf(Color.TRANSPARENT))
             }
+            // Explicitly enable clipToOutline on the image container for launcher compatibility
+            views.setBoolean(R.id.widget_image_container, "setClipToOutline", true)
+
+            // Dynamically set corner outline radius on API 31+ for pixel-perfect rounding matching the active device theme
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                views.setViewOutlinePreferredRadius(R.id.widget_image_container, innerRadiusPx, android.util.TypedValue.COMPLEX_UNIT_PX)
+            }
+
+            // Apply dynamic padding AFTER setting background resources to prevent Android from resetting the padding
+            views.setViewPadding(R.id.widget_container, paddingPx, paddingPx, paddingPx, paddingPx)
 
             // Toggle active ImageView depending on fit style to avoid reflection calls
             val activeImageViewId = when (fitStyle) {

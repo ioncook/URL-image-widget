@@ -1,0 +1,21 @@
+# Built artifacts
+**/build/
+*.apk
+*.aar
+
+# Gradle files
+.gradle/
+/local.properties
+/.gradle
+/build
+
+# IDEs and editors
+/.idea/
+*.iml
+.DS_Store
+captures/
+.externalNativeBuild
+.cxx
+
+# Log files
+*.log

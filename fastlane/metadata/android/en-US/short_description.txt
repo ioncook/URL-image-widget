@@ -1,0 +1,1 @@
+Display and auto-refresh images from custom URLs on your home screen.

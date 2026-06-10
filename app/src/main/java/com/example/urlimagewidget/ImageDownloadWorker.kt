@@ -68,17 +68,30 @@ class ImageDownloadWorker(
                 val widthDp = prefs.getFloat(WidgetConfigurationActivity.PREF_WIDTH_DP_KEY + widgetId, 180f)
                 val heightDp = prefs.getFloat(WidgetConfigurationActivity.PREF_HEIGHT_DP_KEY + widgetId, 110f)
                 
-                // Target size (scaled for high quality/crispness to match exact launcher size)
-                val targetWidth = (widthDp * 2 * density).toInt()
-                val targetHeight = (heightDp * 2 * density).toInt()
+                // Target size (scaled at 1x density matching exact screen pixel bounds to prevent memory overflow)
+                val targetWidth = (widthDp * density).toInt()
+                val targetHeight = (heightDp * density).toInt()
 
-                // Determine rounding radius
-                val outerRadiusDp = 16
-                val innerRadiusDp = if (frameStyle == "Off") outerRadiusDp else {
-                    val r = outerRadiusDp - paddingDp
-                    if (r < 2) 2 else r
+                // Determine rounding radius from system theme corner radius dynamically
+                val isMoto = android.os.Build.MANUFACTURER.lowercase().contains("motorola") ||
+                             android.os.Build.BRAND.lowercase().contains("moto")
+                val outerRadiusPx = if (isMoto) {
+                    16f * density
+                } else if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                    val resId = context.resources.getIdentifier("system_app_widget_background_radius", "dimen", "android")
+                    if (resId != 0) context.resources.getDimension(resId) else 16f * density
+                } else {
+                    16f * density
                 }
-                val radiusPx = innerRadiusDp * density * 2f
+
+                val innerRadiusPx = if (frameStyle == "Off") {
+                    outerRadiusPx
+                } else {
+                    val paddingPx = paddingDp * density
+                    (outerRadiusPx - paddingPx).coerceAtLeast(0f)
+                }
+                
+                val radiusPx = innerRadiusPx
 
                 // Determine frame background color if not Off
                 val customColorStr = prefs.getString(WidgetConfigurationActivity.PREF_COLOR_KEY + widgetId, "#FF5722") ?: "#FF5722"
@@ -119,7 +132,7 @@ class ImageDownloadWorker(
                             val fitted = scaleToFitBitmap(rawBitmap, targetWidth, targetHeight)
                             getRoundedCornerBitmap(fitted, radiusPx)
                         } else {
-                            val paddingPx = paddingDp * density * 2f
+                            val paddingPx = paddingDp * density
                             val containerWidth = targetWidth - 2 * paddingPx
                             val containerHeight = targetHeight - 2 * paddingPx
 
@@ -136,14 +149,12 @@ class ImageDownloadWorker(
                             val output = Bitmap.createBitmap(frameWidth, frameHeight, Bitmap.Config.ARGB_8888)
                             val canvas = Canvas(output)
 
-                            val outerRadiusPx = outerRadiusDp * density * 2f
                             val bgPaint = Paint().apply {
                                 isAntiAlias = true
                                 color = frameColor
                             }
                             canvas.drawRoundRect(RectF(0f, 0f, frameWidth.toFloat(), frameHeight.toFloat()), outerRadiusPx, outerRadiusPx, bgPaint)
 
-                            val innerRadiusPx = innerRadiusDp * density * 2f
                             val roundedImage = getRoundedCornerBitmap(fitted, innerRadiusPx)
 
                             canvas.drawBitmap(roundedImage, paddingPx, paddingPx, null)
@@ -151,7 +162,7 @@ class ImageDownloadWorker(
                         }
                     }
                     else -> { // "Crop"
-                        val paddingPx = (if (frameStyle == "Off") 0 else paddingDp) * density * 2f
+                        val paddingPx = (if (frameStyle == "Off") 0 else paddingDp) * density
                         val innerWidth = targetWidth - 2 * paddingPx
                         val innerHeight = targetHeight - 2 * paddingPx
                         val cropped = if (innerWidth > 0 && innerHeight > 0) {

@@ -1,0 +1,27 @@
+Categories:
+  - System
+  - Utilities
+License: MIT
+AuthorName: Ion Cook
+SourceCode: https://github.com/ioncook/URL-image-widget
+IssueTracker: https://github.com/ioncook/URL-image-widget/issues
+
+Summary: Display and auto-refresh images from custom URLs on your home screen
+Description: |-
+  A clean, modern, and lightweight Android widget that allows you to display and auto-refresh images from any custom URL directly on your home screen.
+
+  Features:
+  * Stream and update images in the background using WorkManager.
+  * Supports grid dimension custom aspect ratios (3x2, 2x2, 5x2, etc.).
+  * Image layout scaling adjustments (Stretch, Crop, Fill).
+  * Adaptive launcher icons with Material themed monochrome stencils.
+  * Customized frame borders (Dark, Light, Custom Hex color wheel picker).
+  * Feathered blur overlays to obscure background details with zero-halo edge blending.
+
+Builds:
+  - versionName: '1.0'
+    versionCode: 1
+    commit: v1.0.0
+    subdir: app
+    gradle:
+      - yes

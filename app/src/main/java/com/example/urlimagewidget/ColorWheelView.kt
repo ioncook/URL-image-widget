@@ -11,7 +11,7 @@ class ColorWheelView @JvmOverloads constructor(
 ) : View(context, attrs, defStyleAttr) {
 
     private val colors = intArrayOf(
-        Color.RED, Color.MAGENTA, Color.BLUE, Color.CYAN, Color.GREEN, Color.YELLOW, Color.RED
+        Color.RED, Color.YELLOW, Color.GREEN, Color.CYAN, Color.BLUE, Color.MAGENTA, Color.RED
     )
 
     private val indicatorPaint = Paint().apply {

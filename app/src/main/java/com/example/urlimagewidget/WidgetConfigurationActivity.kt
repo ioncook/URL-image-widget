@@ -438,11 +438,22 @@ class WidgetConfigurationActivity : AppCompatActivity() {
             isWideImage = false
         }
 
-        val innerRadiusDp = if (frameStyle == "Off") 16 else {
-            val r = 16 - paddingDp
-            if (r < 2) 2 else r
+        val isMoto = android.os.Build.MANUFACTURER.lowercase().contains("motorola") ||
+                     android.os.Build.BRAND.lowercase().contains("moto")
+        val outerRadiusPx = if (isMoto) {
+            16f * density
+        } else if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            val resId = resources.getIdentifier("system_app_widget_background_radius", "dimen", "android")
+            if (resId != 0) resources.getDimension(resId) else 16f * density
+        } else {
+            16f * density
         }
-        cropOverlay.cornerRadiusPx = innerRadiusDp * density
+        val innerRadiusPx = if (frameStyle == "Off") {
+            outerRadiusPx
+        } else {
+            (outerRadiusPx - paddingPx).coerceAtLeast(0f)
+        }
+        cropOverlay.cornerRadiusPx = innerRadiusPx
 
         if (isInitial) {
             val scrollRangeX = imageBounds.width() - cropWidth
@@ -543,6 +554,17 @@ class WidgetConfigurationActivity : AppCompatActivity() {
         // Apply background tint to FrameLayout template
         val background = previewFrame.background as? GradientDrawable
         if (background != null) {
+            val isMoto = android.os.Build.MANUFACTURER.lowercase().contains("motorola") ||
+                         android.os.Build.BRAND.lowercase().contains("moto")
+            val outerRadiusPx = if (isMoto) {
+                16f * density
+            } else if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                val resId = resources.getIdentifier("system_app_widget_background_radius", "dimen", "android")
+                if (resId != 0) resources.getDimension(resId) else 16f * density
+            } else {
+                16f * density
+            }
+            background.cornerRadius = outerRadiusPx
             when (frameStyle) {
                 "Off" -> background.setColor(Color.TRANSPARENT)
                 "Dark" -> background.setColor(Color.parseColor("#2C2C2C"))
@@ -608,13 +630,24 @@ class WidgetConfigurationActivity : AppCompatActivity() {
             previewImage.translationX = 0f
             previewImage.translationY = 0f
 
-            val innerRadiusDp = if (frameStyle == "Off") 16 else {
-                val r = 16 - paddingDp
-                if (r < 2) 2 else r
+            val isMoto = android.os.Build.MANUFACTURER.lowercase().contains("motorola") ||
+                         android.os.Build.BRAND.lowercase().contains("moto")
+            val outerRadiusPx = if (isMoto) {
+                16f * density
+            } else if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                val resId = resources.getIdentifier("system_app_widget_background_radius", "dimen", "android")
+                if (resId != 0) resources.getDimension(resId) else 16f * density
+            } else {
+                16f * density
+            }
+            val innerRadiusPx = if (frameStyle == "Off") {
+                outerRadiusPx
+            } else {
+                (outerRadiusPx - paddingPx).coerceAtLeast(0f)
             }
             previewImage.outlineProvider = object : android.view.ViewOutlineProvider() {
                 override fun getOutline(view: View, outline: android.graphics.Outline) {
-                    outline.setRoundRect(0, 0, view.width, view.height, innerRadiusDp * density)
+                    outline.setRoundRect(0, 0, view.width, view.height, innerRadiusPx)
                 }
             }
             previewImage.clipToOutline = true
@@ -765,13 +798,24 @@ class WidgetConfigurationActivity : AppCompatActivity() {
         }
         previewImage.layoutParams = params
 
-        val innerRadiusDp = if (frameStyle == "Off") 16 else {
-            val r = 16 - paddingDp
-            if (r < 2) 2 else r
+        val isMoto = android.os.Build.MANUFACTURER.lowercase().contains("motorola") ||
+                     android.os.Build.BRAND.lowercase().contains("moto")
+        val outerRadiusPx = if (isMoto) {
+            16f * density
+        } else if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            val resId = resources.getIdentifier("system_app_widget_background_radius", "dimen", "android")
+            if (resId != 0) resources.getDimension(resId) else 16f * density
+        } else {
+            16f * density
+        }
+        val innerRadiusPx = if (frameStyle == "Off") {
+            outerRadiusPx
+        } else {
+            (outerRadiusPx - paddingPx).coerceAtLeast(0f)
         }
         previewImage.outlineProvider = object : android.view.ViewOutlineProvider() {
             override fun getOutline(view: View, outline: android.graphics.Outline) {
-                outline.setRoundRect(0, 0, view.width, view.height, innerRadiusDp * density)
+                outline.setRoundRect(0, 0, view.width, view.height, innerRadiusPx)
             }
         }
         previewImage.clipToOutline = true
