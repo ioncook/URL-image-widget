@@ -281,41 +281,62 @@ class ImageDownloadWorker(
                     val bottom = (pts[3] * h).toInt().coerceIn(0, h - 1)
                     val strength = if (pts.size >= 5) pts[4].toInt() else 10
                     
-                    val rectWidth = right - left + 1
-                    val rectHeight = bottom - top + 1
+                    val featherRadius = (strength * 6.0f).coerceIn(25f, 150f)
+                    val cropExpansion = featherRadius * 2.0f
+                    
+                    // Convert cropExpansion into pixel dimensions relative to image width/height
+                    val cropW = cropExpansion.toInt()
+                    val cropH = cropExpansion.toInt()
+
+                    val leftPx = (left - cropW).coerceIn(0, w - 1)
+                    val topPx = (top - cropH).coerceIn(0, h - 1)
+                    val rightPx = (right + cropW).coerceIn(0, w - 1)
+                    val bottomPx = (bottom + cropH).coerceIn(0, h - 1)
+
+                    val rectWidth = rightPx - leftPx + 1
+                    val rectHeight = bottomPx - topPx + 1
                     if (rectWidth > 0 && rectHeight > 0) {
-                        val region = Bitmap.createBitmap(bitmap, left, top, rectWidth, rectHeight)
+                        val region = Bitmap.createBitmap(bitmap, leftPx, topPx, rectWidth, rectHeight)
                         val blurredRegion = blurRegion(region, strength)
                         
                         val canvas = Canvas(bitmap)
-                        canvas.save()
+                        val shader = BitmapShader(blurredRegion, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP)
                         
-                        // Create layered canvas to apply feathered SRC_IN blending
-                        val layerId = canvas.saveLayer(left.toFloat() - 30f, top.toFloat() - 30f, right.toFloat() + 30f, bottom.toFloat() + 30f, null)
-                        
-                        // 1. Draw feathered mask shape
-                        val maskPaint = Paint().apply {
+                        // Adjust shader matrix to match expanded pixel coordinates
+                        val matrix = Matrix()
+                        val srcBounds = RectF(0f, 0f, blurredRegion.width.toFloat(), blurredRegion.height.toFloat())
+                        val targetBounds = RectF(leftPx.toFloat(), topPx.toFloat(), rightPx.toFloat(), bottomPx.toFloat())
+                        matrix.setRectToRect(srcBounds, targetBounds, Matrix.ScaleToFit.FILL)
+                        shader.setLocalMatrix(matrix)
+
+                        // 1. Draw solid interior rectangle (guarantees core stays 100% blurred)
+                        val solidPaint = Paint().apply {
                             isAntiAlias = true
-                            color = Color.BLACK
+                            setShader(shader)
                             style = Paint.Style.FILL
-                            maskFilter = BlurMaskFilter((strength * 1.5f).coerceIn(10f, 40f), BlurMaskFilter.Blur.NORMAL)
                         }
                         canvas.drawRect(
-                            left.toFloat() + 5f, 
-                            top.toFloat() + 5f, 
-                            right.toFloat() - 5f, 
-                            bottom.toFloat() - 5f, 
-                            maskPaint
+                            left.toFloat(), 
+                            top.toFloat(), 
+                            right.toFloat(), 
+                            bottom.toFloat(), 
+                            solidPaint
                         )
-                        
-                        // 2. Blend the blurred region on top
-                        val blendPaint = Paint().apply {
-                            xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
+
+                        // 2. Draw outer feathered area (seamless transition with absolutely zero halo color bleeding)
+                        val maskPaint = Paint().apply {
+                            isAntiAlias = true
+                            setShader(shader)
+                            style = Paint.Style.FILL
+                            maskFilter = BlurMaskFilter(featherRadius, BlurMaskFilter.Blur.NORMAL)
                         }
-                        canvas.drawBitmap(blurredRegion, left.toFloat(), top.toFloat(), blendPaint)
-                        
-                        canvas.restoreToCount(layerId)
-                        canvas.restore()
+                        val maskRect = RectF(
+                            left.toFloat() - featherRadius * 0.8f,
+                            top.toFloat() - featherRadius * 0.8f,
+                            right.toFloat() + featherRadius * 0.8f,
+                            bottom.toFloat() + featherRadius * 0.8f
+                        )
+                        canvas.drawRect(maskRect, maskPaint)
                         
                         region.recycle()
                         blurredRegion.recycle()

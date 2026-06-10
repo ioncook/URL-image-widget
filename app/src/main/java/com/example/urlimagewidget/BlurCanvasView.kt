@@ -10,6 +10,10 @@ class BlurCanvasView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
 
+    init {
+        setLayerType(LAYER_TYPE_SOFTWARE, null)
+    }
+
     private var originalBitmap: Bitmap? = null
     private var blurredBitmap: Bitmap? = null
 
@@ -73,72 +77,58 @@ class BlurCanvasView @JvmOverloads constructor(
         private const val HANDLE_RADIUS = 24f // Big touch target radius
     }
 
-    // Pre-calculated blurred bitmaps for performance (discrete levels: 5, 10, 15, 20, 25)
-    private val blurredBitmaps = mutableMapOf<Int, Bitmap>()
-
     fun setBitmap(bitmap: Bitmap) {
         originalBitmap = bitmap
-
-        // Recycle previous blurred bitmaps
-        for (bmp in blurredBitmaps.values) {
-            bmp.recycle()
-        }
-        blurredBitmaps.clear()
-
-        // Generate discrete blurs: 5, 10, 15, 20, 25
-        val levels = listOf(5, 10, 15, 20, 25)
-        for (radius in levels) {
-            val scale = 0.15f
-            val w = (bitmap.width * scale).toInt().coerceAtLeast(1)
-            val h = (bitmap.height * scale).toInt().coerceAtLeast(1)
-            val small = Bitmap.createScaledBitmap(bitmap, w, h, true)
-
-            val pixels = IntArray(w * h)
-            small.getPixels(pixels, 0, w, 0, 0, w, h)
-            val blurred = IntArray(w * h)
-            
-            // Horizontal Box Blur
-            for (y in 0 until h) {
-                for (x in 0 until w) {
-                    var r = 0; var g = 0; var b = 0; var count = 0
-                    for (dx in -radius..radius) {
-                        val nx = x + dx
-                        if (nx in 0 until w) {
-                            val p = pixels[y * w + nx]
-                            r += (p shr 16) and 0xFF
-                            g += (p shr 8) and 0xFF
-                            b += p and 0xFF
-                            count++
-                        }
-                    }
-                    blurred[y * w + x] = (0xFF shl 24) or ((r / count) shl 16) or ((g / count) shl 8) or (b / count)
-                }
-            }
-            System.arraycopy(blurred, 0, pixels, 0, pixels.size)
-            // Vertical Box Blur
-            for (y in 0 until h) {
-                for (x in 0 until w) {
-                    var r = 0; var g = 0; var b = 0; var count = 0
-                    for (dy in -radius..radius) {
-                        val ny = y + dy
-                        if (ny in 0 until h) {
-                            val p = pixels[ny * w + x]
-                            r += (p shr 16) and 0xFF
-                            g += (p shr 8) and 0xFF
-                            b += p and 0xFF
-                            count++
-                        }
-                    }
-                    blurred[y * w + x] = (0xFF shl 24) or ((r / count) shl 16) or ((g / count) shl 8) or (b / count)
-                }
-            }
-            small.setPixels(blurred, 0, w, 0, 0, w, h)
-
-            val fullBlurred = Bitmap.createScaledBitmap(small, bitmap.width, bitmap.height, true)
-            small.recycle()
-            blurredBitmaps[radius] = fullBlurred
-        }
         invalidate()
+    }
+
+    private fun blurRegion(bitmap: Bitmap, radius: Int): Bitmap {
+        val scale = 0.15f
+        val w = (bitmap.width * scale).toInt().coerceAtLeast(1)
+        val h = (bitmap.height * scale).toInt().coerceAtLeast(1)
+        val small = Bitmap.createScaledBitmap(bitmap, w, h, true)
+
+        val pixels = IntArray(w * h)
+        small.getPixels(pixels, 0, w, 0, 0, w, h)
+        val blurred = IntArray(w * h)
+        
+        for (y in 0 until h) {
+            for (x in 0 until w) {
+                var r = 0; var g = 0; var b = 0; var count = 0
+                for (dx in -radius..radius) {
+                    val nx = x + dx
+                    if (nx in 0 until w) {
+                        val p = pixels[y * w + nx]
+                        r += (p shr 16) and 0xFF
+                        g += (p shr 8) and 0xFF
+                        b += p and 0xFF
+                        count++
+                    }
+                }
+                blurred[y * w + x] = (0xFF shl 24) or ((r / count) shl 16) or ((g / count) shl 8) or (b / count)
+            }
+        }
+        System.arraycopy(blurred, 0, pixels, 0, pixels.size)
+        for (y in 0 until h) {
+            for (x in 0 until w) {
+                var r = 0; var g = 0; var b = 0; var count = 0
+                for (dy in -radius..radius) {
+                    val ny = y + dy
+                    if (ny in 0 until h) {
+                        val p = pixels[ny * w + x]
+                        r += (p shr 16) and 0xFF
+                        g += (p shr 8) and 0xFF
+                        b += p and 0xFF
+                        count++
+                    }
+                }
+                blurred[y * w + x] = (0xFF shl 24) or ((r / count) shl 16) or ((g / count) shl 8) or (b / count)
+            }
+        }
+        small.setPixels(blurred, 0, w, 0, 0, w, h)
+        val result = Bitmap.createScaledBitmap(small, bitmap.width, bitmap.height, true)
+        small.recycle()
+        return result
     }
 
     private fun calculateImageBounds() {
@@ -196,46 +186,70 @@ class BlurCanvasView @JvmOverloads constructor(
         // 2. Draw Blurred overlays
         for (i in blurRects.indices) {
             val strength = if (i in blurStrengths.indices) blurStrengths[i] else 10
-            // Find the closest pre-blurred bitmap level
-            val level = when {
-                strength <= 7 -> 5
-                strength <= 12 -> 10
-                strength <= 17 -> 15
-                strength <= 22 -> 20
-                else -> 25
-            }
-            val blr = blurredBitmaps[level] ?: bmp
-
             toScreenRect(blurRects[i], tempRect)
+
             canvas.save()
             
-            // Draw blurred overlay with feathered edges using a layer and paint with mask filter
-            val layerId = canvas.saveLayer(tempRect.left - 30f, tempRect.top - 30f, tempRect.right + 30f, tempRect.bottom + 30f, null)
+            // Expand the crop region to include the cropExpansion area so we have pixels outside the box to blend
+            val featherRadius = (strength * 6.0f).coerceIn(25f, 150f)
+            val cropExpansion = featherRadius * 2.0f
+
+            // Convert cropExpansion in screen space to pixel coordinates on the bitmap
+            val cropWBitmap = (cropExpansion / imageBounds.width() * bmp.width).toInt()
+            val cropHBitmap = (cropExpansion / imageBounds.height() * bmp.height).toInt()
+
+            val leftPx = ((blurRects[i].left * bmp.width).toInt() - cropWBitmap).coerceIn(0, bmp.width - 1)
+            val topPx = ((blurRects[i].top * bmp.height).toInt() - cropHBitmap).coerceIn(0, bmp.height - 1)
+            val rightPx = ((blurRects[i].right * bmp.width).toInt() + cropWBitmap).coerceIn(0, bmp.width - 1)
+            val bottomPx = ((blurRects[i].bottom * bmp.height).toInt() + cropHBitmap).coerceIn(0, bmp.height - 1)
+
+            val subW = (rightPx - leftPx + 1).coerceAtLeast(1)
+            val subH = (bottomPx - topPx + 1).coerceAtLeast(1)
+
+            val region = Bitmap.createBitmap(bmp, leftPx, topPx, subW, subH)
+            val blr = blurRegion(region, strength)
+            region.recycle()
+
+            // Calculate expanded screen bounds matching the expanded bitmap crop region
+            val expandedTempRect = RectF(
+                imageBounds.left + (leftPx.toFloat() / bmp.width) * imageBounds.width(),
+                imageBounds.top + (topPx.toFloat() / bmp.height) * imageBounds.height(),
+                imageBounds.left + (rightPx.toFloat() / bmp.width) * imageBounds.width(),
+                imageBounds.top + (bottomPx.toFloat() / bmp.height) * imageBounds.height()
+            )
+
+            // Draw blurred overlay with feathered edges using BitmapShader to avoid saveLayer color-bleeding entirely!
+            val shader = BitmapShader(blr, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP)
             
-            // 1. Draw feathered mask shape
+            // Adjust shader matrix to match expandedTempRect screen coordinates
+            val matrix = Matrix()
+            val srcBounds = RectF(0f, 0f, blr.width.toFloat(), blr.height.toFloat())
+            matrix.setRectToRect(srcBounds, expandedTempRect, Matrix.ScaleToFit.FILL)
+            shader.setLocalMatrix(matrix)
+
+            // 1. Draw solid interior rectangle (guarantees core stays 100% blurred)
+            val solidPaint = Paint().apply {
+                isAntiAlias = true
+                setShader(shader)
+                style = Paint.Style.FILL
+            }
+            canvas.drawRect(tempRect, solidPaint)
+
+            // 2. Draw outer feathered area (seamless transition with absolutely zero halo color bleeding)
             val maskPaint = Paint().apply {
                 isAntiAlias = true
-                color = Color.BLACK
+                setShader(shader)
                 style = Paint.Style.FILL
-                // Feather edge: radius is proportional to blur strength (e.g. coerce 10f to 30f)
-                maskFilter = BlurMaskFilter((strength * 1.5f).coerceIn(10f, 40f), BlurMaskFilter.Blur.NORMAL)
+                maskFilter = BlurMaskFilter(featherRadius, BlurMaskFilter.Blur.NORMAL)
             }
-            canvas.drawRect(
-                tempRect.left + 5f, 
-                tempRect.top + 5f, 
-                tempRect.right - 5f, 
-                tempRect.bottom - 5f, 
-                maskPaint
+            val maskRect = RectF(
+                tempRect.left - featherRadius * 0.8f,
+                tempRect.top - featherRadius * 0.8f,
+                tempRect.right + featherRadius * 0.8f,
+                tempRect.bottom + featherRadius * 0.8f
             )
-            
-            // 2. Draw blurred bitmap over the feathered mask using SRC_IN
-            val blendPaint = Paint().apply {
-                xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
-            }
-            canvas.drawBitmap(blr, null, imageBounds, blendPaint)
-            
-            canvas.restoreToCount(layerId)
-            canvas.restore()
+            canvas.drawRect(maskRect, maskPaint)
+            blr.recycle()
 
             // Draw border around the crop box
             if (i == selectedIndex) {
@@ -253,8 +267,6 @@ class BlurCanvasView @JvmOverloads constructor(
                 
                 canvas.drawCircle(tempRect.right, tempRect.bottom, 14f, handlePaint)
                 canvas.drawCircle(tempRect.right, tempRect.bottom, 14f, handleBorderPaint)
-            } else {
-                canvas.drawRect(tempRect, borderPaint)
             }
         }
     }

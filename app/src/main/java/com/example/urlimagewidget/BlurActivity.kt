@@ -68,6 +68,11 @@ class BlurActivity : AppCompatActivity() {
         blurCanvasView.onSelectionChangedListener = { hasSelection ->
             btnDeleteBox.visibility = if (hasSelection) View.VISIBLE else View.GONE
             strengthLayout.visibility = if (hasSelection) View.VISIBLE else View.GONE
+            if (hasSelection && blurCanvasView.selectedIndex in blurCanvasView.blurStrengths.indices) {
+                val currentStrength = blurCanvasView.blurStrengths[blurCanvasView.selectedIndex]
+                strengthSeekBar.progress = currentStrength
+                strengthLabel.text = "Blur Strength: $currentStrength"
+            }
         }
 
         blurCanvasView.onStrengthChangedListener = { strength ->

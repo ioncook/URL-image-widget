@@ -1,7 +1,12 @@
 R_DEF: Internal format may change without notice
 local
+color ic_launcher_background
 dimen widget_margin
 drawable circle_color_preview
+drawable ic_edit_pencil
+drawable ic_launcher_foreground
+drawable ic_launcher_monochrome
+drawable logo
 drawable placeholder_image
 drawable widget_background
 drawable widget_inner_background
@@ -13,6 +18,8 @@ id button_blur_elements
 id button_blur_save
 id button_clear_all
 id button_delete_box
+id button_edit_widget
+id button_refresh_widget
 id button_save
 id color_wheel_view
 id crop_overlay
@@ -23,12 +30,15 @@ id edit_text_url
 id layout_blur_strength
 id layout_crop_adjuster
 id layout_custom_color
+id layout_empty_state
 id layout_frame_thickness
+id layout_widget_list
 id preview_container
 id preview_full_image
 id preview_loading_container
 id preview_widget_frame
 id preview_widget_image
+id scroll_widget_list
 id seek_bar_alpha
 id seek_bar_blur_strength
 id seek_bar_brightness
@@ -38,6 +48,8 @@ id spinner_frame
 id text_blur_strength_label
 id text_color_hex
 id text_thickness_label
+id text_widget_title
+id text_widget_url
 id view_color_picker_trigger
 id widget_container
 id widget_image
@@ -48,10 +60,15 @@ id widget_loading_container
 id widget_progress
 id widget_status_text
 id widget_tap_target
+id widget_thumbnail
 layout activity_blur
 layout activity_configuration
 layout activity_main
 layout dialog_color_picker
+layout item_widget
+layout layout_action_bar
 layout widget_layout
+mipmap ic_launcher
+mipmap ic_launcher_round
 string app_name
 xml image_widget_info

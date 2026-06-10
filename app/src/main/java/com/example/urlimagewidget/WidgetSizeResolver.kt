@@ -19,7 +19,9 @@ object WidgetSizeResolver {
         if (dp < 180) return 2
         if (dp < 260) return 3
         if (dp < 340) return 4
-        return ((dp + 30) / 70).coerceAtLeast(5)
+        if (dp < 420) return 5
+        if (dp < 500) return 6
+        return ((dp + 30) / 70).coerceAtLeast(7)
     }
 
     fun dpToRows(dp: Int): Int {

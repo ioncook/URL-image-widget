@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="ic_launcher_background">#222222</color>
     <dimen name="widget_margin">8dp</dimen>
     <string name="app_name">URL Image Widget</string>
 </resources>
