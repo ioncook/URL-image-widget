@@ -97,6 +97,7 @@ open class ImageWidgetProvider : AppWidgetProvider() {
             edit.remove(WidgetConfigurationActivity.PREF_COLS_KEY + appWidgetId)
             edit.remove(WidgetConfigurationActivity.PREF_ROWS_KEY + appWidgetId)
             workManager.cancelUniqueWork("widget_update_$appWidgetId")
+            workManager.cancelUniqueWork("widget_update_onetime_$appWidgetId")
             
             // Delete the persisted image file
             val file = java.io.File(context.filesDir, "widget_image_$appWidgetId.png")
@@ -289,7 +290,7 @@ open class ImageWidgetProvider : AppWidgetProvider() {
             WorkManager.getInstance(context.applicationContext).enqueue(workRequest)
         }
 
-        fun schedulePeriodicUpdate(context: Context, widgetId: Int, url: String, intervalMinutes: Int) {
+        fun scheduleOneTimeUpdate(context: Context, widgetId: Int, url: String, delayMinutes: Int) {
             val data = workDataOf(
                 ImageDownloadWorker.KEY_WIDGET_ID to widgetId,
                 ImageDownloadWorker.KEY_IMAGE_URL to url
@@ -299,21 +300,56 @@ open class ImageWidgetProvider : AppWidgetProvider() {
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build()
 
-            // System limit: PeriodicWorkRequest minimum is 15 minutes
-            val clampedInterval = if (intervalMinutes < 15) 15 else intervalMinutes
+            val safeDelay = delayMinutes.coerceAtLeast(1)
 
-            val workRequest = PeriodicWorkRequestBuilder<ImageDownloadWorker>(
-                clampedInterval.toLong(), java.util.concurrent.TimeUnit.MINUTES
-            )
+            val workRequest = OneTimeWorkRequestBuilder<ImageDownloadWorker>()
                 .setInputData(data)
                 .setConstraints(constraints)
+                .setInitialDelay(safeDelay.toLong(), java.util.concurrent.TimeUnit.MINUTES)
                 .build()
 
-            WorkManager.getInstance(context.applicationContext).enqueueUniquePeriodicWork(
-                "widget_update_$widgetId",
-                ExistingPeriodicWorkPolicy.UPDATE,
+            WorkManager.getInstance(context.applicationContext).enqueueUniqueWork(
+                "widget_update_onetime_$widgetId",
+                ExistingWorkPolicy.REPLACE,
                 workRequest
             )
+        }
+
+        fun schedulePeriodicUpdate(context: Context, widgetId: Int, url: String, intervalMinutes: Int) {
+            val workManager = WorkManager.getInstance(context.applicationContext)
+
+            if (intervalMinutes < 15) {
+                // Cancel periodic work if it was running
+                workManager.cancelUniqueWork("widget_update_$widgetId")
+                
+                // Schedule one-time delayed updates
+                scheduleOneTimeUpdate(context, widgetId, url, intervalMinutes)
+            } else {
+                // Cancel any one-time scheduled updates
+                workManager.cancelUniqueWork("widget_update_onetime_$widgetId")
+
+                val data = workDataOf(
+                    ImageDownloadWorker.KEY_WIDGET_ID to widgetId,
+                    ImageDownloadWorker.KEY_IMAGE_URL to url
+                )
+
+                val constraints = Constraints.Builder()
+                    .setRequiredNetworkType(NetworkType.CONNECTED)
+                    .build()
+
+                val workRequest = PeriodicWorkRequestBuilder<ImageDownloadWorker>(
+                    intervalMinutes.toLong(), java.util.concurrent.TimeUnit.MINUTES
+                )
+                    .setInputData(data)
+                    .setConstraints(constraints)
+                    .build()
+
+                workManager.enqueueUniquePeriodicWork(
+                    "widget_update_$widgetId",
+                    ExistingPeriodicWorkPolicy.UPDATE,
+                    workRequest
+                )
+            }
         }
     }
 }

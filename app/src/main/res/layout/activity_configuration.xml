@@ -134,7 +134,7 @@
                 android:id="@+id/edit_text_interval"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="60 (min 15)"
+                android:hint="rec: 15min"
                 android:textColor="#FFFFFF"
                 android:textColorHint="#55FFFFFF"
                 android:inputType="number"

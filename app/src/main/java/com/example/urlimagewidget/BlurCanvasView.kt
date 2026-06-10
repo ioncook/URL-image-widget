@@ -189,6 +189,7 @@ class BlurCanvasView @JvmOverloads constructor(
             toScreenRect(blurRects[i], tempRect)
 
             canvas.save()
+            canvas.clipRect(imageBounds)
             
             // Expand the crop region to include the cropExpansion area so we have pixels outside the box to blend
             val featherRadius = (strength * 6.0f).coerceIn(25f, 150f)
@@ -250,6 +251,7 @@ class BlurCanvasView @JvmOverloads constructor(
             )
             canvas.drawRect(maskRect, maskPaint)
             blr.recycle()
+            canvas.restore()
 
             // Draw border around the crop box
             if (i == selectedIndex) {
@@ -367,20 +369,20 @@ class BlurCanvasView @JvmOverloads constructor(
 
                     when (activeResizeCorner) {
                         CORNER_TL -> {
-                            tempRect.left = (tempRect.left + dx).coerceIn(imageBounds.left, tempRect.right - 40f)
-                            tempRect.top = (tempRect.top + dy).coerceIn(imageBounds.top, tempRect.bottom - 40f)
+                            tempRect.left = (tempRect.left + dx).coerceIn(imageBounds.left, tempRect.right - 8f)
+                            tempRect.top = (tempRect.top + dy).coerceIn(imageBounds.top, tempRect.bottom - 8f)
                         }
                         CORNER_TR -> {
-                            tempRect.right = (tempRect.right + dx).coerceIn(tempRect.left + 40f, imageBounds.right)
-                            tempRect.top = (tempRect.top + dy).coerceIn(imageBounds.top, tempRect.bottom - 40f)
+                            tempRect.right = (tempRect.right + dx).coerceIn(tempRect.left + 8f, imageBounds.right)
+                            tempRect.top = (tempRect.top + dy).coerceIn(imageBounds.top, tempRect.bottom - 8f)
                         }
                         CORNER_BL -> {
-                            tempRect.left = (tempRect.left + dx).coerceIn(imageBounds.left, tempRect.right - 40f)
-                            tempRect.bottom = (tempRect.bottom + dy).coerceIn(tempRect.top + 40f, imageBounds.bottom)
+                            tempRect.left = (tempRect.left + dx).coerceIn(imageBounds.left, tempRect.right - 8f)
+                            tempRect.bottom = (tempRect.bottom + dy).coerceIn(tempRect.top + 8f, imageBounds.bottom)
                         }
                         CORNER_BR -> {
-                            tempRect.right = (tempRect.right + dx).coerceIn(tempRect.left + 40f, imageBounds.right)
-                            tempRect.bottom = (tempRect.bottom + dy).coerceIn(tempRect.top + 40f, imageBounds.bottom)
+                            tempRect.right = (tempRect.right + dx).coerceIn(tempRect.left + 8f, imageBounds.right)
+                            tempRect.bottom = (tempRect.bottom + dy).coerceIn(tempRect.top + 8f, imageBounds.bottom)
                         }
                     }
 

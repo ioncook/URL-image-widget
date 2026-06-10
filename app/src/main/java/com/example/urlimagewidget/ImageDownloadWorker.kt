@@ -177,6 +177,22 @@ class ImageDownloadWorker(
             e.printStackTrace()
             showError(appWidgetManager, widgetId, views, "Error: ${e.message}")
             return Result.failure()
+        } finally {
+            if (widgetId != AppWidgetManager.INVALID_APPWIDGET_ID && !imageUrl.isNullOrEmpty()) {
+                val appWidgetIds = appWidgetManager.getAppWidgetIds(
+                    android.content.ComponentName(context, ImageWidgetProvider::class.java)
+                )
+                if (widgetId in appWidgetIds) {
+                    val prefs = context.getSharedPreferences(
+                        WidgetConfigurationActivity.PREFS_NAME,
+                        Context.MODE_PRIVATE
+                    )
+                    val intervalMinutes = prefs.getInt(WidgetConfigurationActivity.PREF_INTERVAL_KEY + widgetId, 60)
+                    if (intervalMinutes < 15) {
+                        ImageWidgetProvider.scheduleOneTimeUpdate(context, widgetId, imageUrl, intervalMinutes)
+                    }
+                }
+            }
         }
     }
 
