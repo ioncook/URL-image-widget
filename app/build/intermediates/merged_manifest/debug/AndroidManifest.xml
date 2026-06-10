@@ -29,7 +29,6 @@
         android:label="URL Image Widget"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:testOnly="true"
         android:theme="@style/Theme.Material3.DayNight" >
 
         <!-- Launcher Activity -->
@@ -46,7 +45,6 @@
         <!-- Widget Configuration Activity -->
         <activity
             android:name="com.example.urlimagewidget.WidgetConfigurationActivity"
-            android:excludeFromRecents="true"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
@@ -70,6 +68,48 @@
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/image_widget_info" />
+        </receiver>
+
+        <!-- Widget 2 Broadcast Receiver -->
+        <receiver
+            android:name="com.example.urlimagewidget.ImageWidgetProvider2"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.example.urlimagewidget.REFRESH" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/image_widget_info_2" />
+        </receiver>
+
+        <!-- Widget 3 Broadcast Receiver -->
+        <receiver
+            android:name="com.example.urlimagewidget.ImageWidgetProvider3"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.example.urlimagewidget.REFRESH" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/image_widget_info_3" />
+        </receiver>
+
+        <!-- Widget 4 Broadcast Receiver -->
+        <receiver
+            android:name="com.example.urlimagewidget.ImageWidgetProvider4"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.example.urlimagewidget.REFRESH" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/image_widget_info_4" />
         </receiver>
 
         <provider

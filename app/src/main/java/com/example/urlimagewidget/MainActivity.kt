@@ -57,8 +57,11 @@ class MainActivity : AppCompatActivity() {
         layoutWidgetList.removeAllViews()
 
         val appWidgetManager = AppWidgetManager.getInstance(this)
-        val componentName = ComponentName(this, ImageWidgetProvider::class.java)
-        val widgetIds = appWidgetManager.getAppWidgetIds(componentName)
+        val p1 = appWidgetManager.getAppWidgetIds(ComponentName(this, ImageWidgetProvider::class.java)) ?: intArrayOf()
+        val p2 = appWidgetManager.getAppWidgetIds(ComponentName(this, ImageWidgetProvider2::class.java)) ?: intArrayOf()
+        val p3 = appWidgetManager.getAppWidgetIds(ComponentName(this, ImageWidgetProvider3::class.java)) ?: intArrayOf()
+        val p4 = appWidgetManager.getAppWidgetIds(ComponentName(this, ImageWidgetProvider4::class.java)) ?: intArrayOf()
+        val widgetIds = p1 + p2 + p3 + p4
 
         if (widgetIds == null || widgetIds.isEmpty()) {
             scrollWidgetList.visibility = View.GONE

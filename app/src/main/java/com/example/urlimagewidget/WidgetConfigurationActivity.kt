@@ -106,7 +106,7 @@ class WidgetConfigurationActivity : AppCompatActivity() {
                     putExtra("appWidgetId", appWidgetId)
                     putExtra("imageUrl", url)
                 }
-                startActivityForResult(intent, REQUEST_CODE_BLUR)
+                startActivity(intent)
             }
         }
 
@@ -256,6 +256,11 @@ class WidgetConfigurationActivity : AppCompatActivity() {
                 finish()
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updateLivePreview()
     }
 
     private fun setupPreviewListeners() {

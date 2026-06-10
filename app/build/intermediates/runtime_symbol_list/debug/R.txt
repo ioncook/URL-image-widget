@@ -6787,3 +6787,6 @@ int styleable ViewStubCompat_android_id 0
 int styleable ViewStubCompat_android_layout 1
 int styleable ViewStubCompat_android_inflatedId 2
 int xml image_widget_info 0x7f120000
+int xml image_widget_info_2 0x7f120001
+int xml image_widget_info_3 0x7f120002
+int xml image_widget_info_4 0x7f120003

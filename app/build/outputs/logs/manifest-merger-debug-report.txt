@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:2:1-55:12
-INJECTED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:2:1-55:12
-INJECTED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:2:1-55:12
-INJECTED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:2:1-55:12
+ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:2:1-96:12
+INJECTED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:2:1-96:12
+INJECTED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:2:1-96:12
+INJECTED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:2:1-96:12
 MERGED from [com.google.android.material:material:1.11.0] /home/ionc/.gradle/caches/transforms-3/bcd43715221e12d68359d2e1ce9eb1f5/transformed/material-1.11.0/AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.appcompat:appcompat-resources:1.6.1] /home/ionc/.gradle/caches/transforms-3/11b5e90291150dff24e523918a741559/transformed/appcompat-resources-1.6.1/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] /home/ionc/.gradle/caches/transforms-3/51e568c25b476befaeba7a9c383b9f3c/transformed/constraintlayout-2.0.1/AndroidManifest.xml:2:1-11:12
@@ -68,8 +68,8 @@ ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xm
 	android:name
 		ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:4:22-64
 application
-ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:6:5-53:19
-INJECTED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:6:5-53:19
+ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:6:5-94:19
+INJECTED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:6:5-94:19
 MERGED from [com.google.android.material:material:1.11.0] /home/ionc/.gradle/caches/transforms-3/bcd43715221e12d68359d2e1ce9eb1f5/transformed/material-1.11.0/AndroidManifest.xml:22:5-20
 MERGED from [com.google.android.material:material:1.11.0] /home/ionc/.gradle/caches/transforms-3/bcd43715221e12d68359d2e1ce9eb1f5/transformed/material-1.11.0/AndroidManifest.xml:22:5-20
 MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] /home/ionc/.gradle/caches/transforms-3/51e568c25b476befaeba7a9c383b9f3c/transformed/constraintlayout-2.0.1/AndroidManifest.xml:9:5-20
@@ -123,47 +123,63 @@ ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xm
 	android:name
 		ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:20:27-74
 activity#com.example.urlimagewidget.WidgetConfigurationActivity
-ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:25:9-32:20
-	android:excludeFromRecents
-		ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:28:13-46
+ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:25:9-31:20
 	android:exported
 		ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:27:13-36
 	android:name
 		ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:26:13-56
 intent-filter#action:name:android.appwidget.action.APPWIDGET_CONFIGURE
-ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:29:13-31:29
+ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:28:13-30:29
 action#android.appwidget.action.APPWIDGET_CONFIGURE
-ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:30:17-87
+ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:29:17-87
 	android:name
-		ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:30:25-84
+		ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:29:25-84
 activity#com.example.urlimagewidget.BlurActivity
-ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:34:9-36:40
+ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:33:9-35:40
 	android:exported
-		ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:36:13-37
+		ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:35:13-37
 	android:name
-		ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:35:13-41
+		ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:34:13-41
 receiver#com.example.urlimagewidget.ImageWidgetProvider
-ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:39:9-51:20
+ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:38:9-50:20
 	android:exported
-		ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:41:13-36
+		ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:40:13-36
 	android:name
-		ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:40:13-48
+		ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:39:13-48
 intent-filter#action:name:android.appwidget.action.APPWIDGET_UPDATE+action:name:com.example.urlimagewidget.REFRESH
-ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:42:13-46:29
+ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:41:13-45:29
 action#android.appwidget.action.APPWIDGET_UPDATE
-ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:43:17-84
+ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:42:17-84
 	android:name
-		ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:43:25-81
+		ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:42:25-81
 action#com.example.urlimagewidget.REFRESH
-ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:45:17-77
+ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:44:17-77
 	android:name
-		ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:45:25-74
+		ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:44:25-74
 meta-data#android.appwidget.provider
-ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:48:13-50:61
+ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:47:13-49:61
 	android:resource
-		ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:50:17-58
-	android:name
 		ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:49:17-58
+	android:name
+		ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:48:17-58
+receiver#com.example.urlimagewidget.ImageWidgetProvider2
+ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:53:9-64:20
+	android:exported
+		ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:55:13-36
+	android:name
+		ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:54:13-49
+receiver#com.example.urlimagewidget.ImageWidgetProvider3
+ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:67:9-78:20
+	android:exported
+		ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:69:13-36
+	android:name
+		ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:68:13-49
+receiver#com.example.urlimagewidget.ImageWidgetProvider4
+ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:81:9-92:20
+	android:exported
+		ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:83:13-36
+	android:name
+		ADDED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml:82:13-49
 uses-sdk
 INJECTED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from /home/ionc/Documents/URL-image-widget/app/src/main/AndroidManifest.xml

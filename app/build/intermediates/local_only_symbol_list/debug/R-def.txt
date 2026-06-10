@@ -72,3 +72,6 @@ mipmap ic_launcher
 mipmap ic_launcher_round
 string app_name
 xml image_widget_info
+xml image_widget_info_2
+xml image_widget_info_3
+xml image_widget_info_4

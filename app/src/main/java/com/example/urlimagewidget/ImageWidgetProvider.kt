@@ -12,7 +12,7 @@ import android.os.Bundle
 import android.widget.RemoteViews
 import androidx.work.*
 
-class ImageWidgetProvider : AppWidgetProvider() {
+open class ImageWidgetProvider : AppWidgetProvider() {
 
     override fun onUpdate(
         context: Context,

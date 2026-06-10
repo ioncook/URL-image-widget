@@ -9,5 +9,7 @@
     android:configure="com.example.urlimagewidget.WidgetConfigurationActivity"
     android:resizeMode="horizontal|vertical"
     android:widgetCategory="home_screen"
-    android:widgetFeatures="reconfigurable">
+    android:widgetFeatures="reconfigurable"
+    android:targetCellWidth="3"
+    android:targetCellHeight="2">
 </appwidget-provider>
