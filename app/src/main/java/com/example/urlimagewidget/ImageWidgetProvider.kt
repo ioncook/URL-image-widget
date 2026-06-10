@@ -218,28 +218,24 @@ open class ImageWidgetProvider : AppWidgetProvider() {
                 (outerRadiusPx - paddingPx).coerceAtLeast(0f)
             }
 
+            // Apply dynamic padding and background to the container views
             if (frameStyle == "Off" || fitStyle == "Fill") {
-                // Remove background completely for Off style or Fill style
                 views.setInt(R.id.widget_container, "setBackgroundResource", 0)
-                // Use the outer background shape to define the outer corner rounding path for the image container
                 views.setInt(R.id.widget_image_container, "setBackgroundResource", R.drawable.widget_background)
                 views.setColorStateList(R.id.widget_image_container, "setBackgroundTintList", ColorStateList.valueOf(Color.TRANSPARENT))
             } else {
                 views.setInt(R.id.widget_container, "setBackgroundResource", R.drawable.widget_background)
                 views.setColorStateList(R.id.widget_container, "setBackgroundTintList", ColorStateList.valueOf(frameColor))
-                // Use the inner background shape to define the inner corner rounding path for the image container
                 views.setInt(R.id.widget_image_container, "setBackgroundResource", R.drawable.widget_inner_background)
                 views.setColorStateList(R.id.widget_image_container, "setBackgroundTintList", ColorStateList.valueOf(Color.TRANSPARENT))
             }
-            // Explicitly enable clipToOutline on the image container for launcher compatibility
+
             views.setBoolean(R.id.widget_image_container, "setClipToOutline", true)
 
-            // Dynamically set corner outline radius on API 31+ for pixel-perfect rounding matching the active device theme
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
                 views.setViewOutlinePreferredRadius(R.id.widget_image_container, innerRadiusPx, android.util.TypedValue.COMPLEX_UNIT_PX)
             }
 
-            // Apply dynamic padding AFTER setting background resources to prevent Android from resetting the padding
             views.setViewPadding(R.id.widget_container, paddingPx, paddingPx, paddingPx, paddingPx)
 
             // Toggle active ImageView depending on fit style to avoid reflection calls
@@ -260,6 +256,14 @@ open class ImageWidgetProvider : AppWidgetProvider() {
                 if (bitmap != null) {
                     views.setViewVisibility(R.id.widget_loading_container, android.view.View.GONE)
                     views.setImageViewBitmap(activeImageViewId, bitmap)
+
+                    // Clear root backgrounds and paddings since the frame and padding are already baked into the bitmap
+                    views.setInt(R.id.widget_container, "setBackgroundResource", 0)
+                    views.setInt(R.id.widget_image_container, "setBackgroundResource", 0)
+                    views.setViewPadding(R.id.widget_container, 0, 0, 0, 0)
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                        views.setViewOutlinePreferredRadius(R.id.widget_image_container, 0f, android.util.TypedValue.COMPLEX_UNIT_PX)
+                    }
                 }
             }
 

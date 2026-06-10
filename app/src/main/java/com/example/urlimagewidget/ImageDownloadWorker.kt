@@ -121,58 +121,43 @@ class ImageDownloadWorker(
                     }
                 }
 
-                // Process bitmap based on selected fit style
-                val processedBitmap = when (fitStyle) {
-                    "Stretch" -> {
-                        val stretched = Bitmap.createScaledBitmap(rawBitmap, targetWidth, targetHeight, true)
-                        getRoundedCornerBitmap(stretched, radiusPx)
+                // Process bitmap based on selected fit style and frame configuration
+                val processedBitmap = if (frameStyle == "Off") {
+                    // No frame: just scale/crop/stretch to the target widget size and round to outerRadiusPx
+                    val img = when (fitStyle) {
+                        "Stretch" -> Bitmap.createScaledBitmap(rawBitmap, targetWidth, targetHeight, true)
+                        "Fill" -> scaleToFitBitmap(rawBitmap, targetWidth, targetHeight)
+                        else -> cropBitmap(rawBitmap, targetWidth, targetHeight, cropX, cropY)
                     }
-                    "Fill" -> {
-                        if (frameStyle == "Off") {
-                            val fitted = scaleToFitBitmap(rawBitmap, targetWidth, targetHeight)
-                            getRoundedCornerBitmap(fitted, radiusPx)
-                        } else {
-                            val paddingPx = paddingDp * density
-                            val containerWidth = targetWidth - 2 * paddingPx
-                            val containerHeight = targetHeight - 2 * paddingPx
+                    getRoundedCornerBitmap(img, radiusPx)
+                } else {
+                    // Frame is ON: draw frame background and place inner rounded image inside
+                    val paddingPx = paddingDp * density
+                    val containerWidth = (targetWidth - 2 * paddingPx).toInt().coerceAtLeast(1)
+                    val containerHeight = (targetHeight - 2 * paddingPx).toInt().coerceAtLeast(1)
 
-                            val fitted = if (containerWidth > 0 && containerHeight > 0) {
-                                scaleToFitBitmap(rawBitmap, containerWidth.toInt(), containerHeight.toInt())
-                            } else {
-                                scaleToFitBitmap(rawBitmap, targetWidth, targetHeight)
-                            }
-
-                            android.util.Log.d("WidgetWorker", "Fill mode: rawBitmap=${rawBitmap.width}x${rawBitmap.height}, target=${targetWidth}x${targetHeight}, padding=$paddingPx, fitted=${fitted.width}x${fitted.height}")
-
-                            val frameWidth = (fitted.width + 2 * paddingPx).toInt()
-                            val frameHeight = (fitted.height + 2 * paddingPx).toInt()
-                            val output = Bitmap.createBitmap(frameWidth, frameHeight, Bitmap.Config.ARGB_8888)
-                            val canvas = Canvas(output)
-
-                            val bgPaint = Paint().apply {
-                                isAntiAlias = true
-                                color = frameColor
-                            }
-                            canvas.drawRoundRect(RectF(0f, 0f, frameWidth.toFloat(), frameHeight.toFloat()), outerRadiusPx, outerRadiusPx, bgPaint)
-
-                            val roundedImage = getRoundedCornerBitmap(fitted, innerRadiusPx)
-
-                            canvas.drawBitmap(roundedImage, paddingPx, paddingPx, null)
-                            output
-                        }
+                    val innerImg = when (fitStyle) {
+                        "Stretch" -> Bitmap.createScaledBitmap(rawBitmap, containerWidth, containerHeight, true)
+                        "Fill" -> scaleToFitBitmap(rawBitmap, containerWidth, containerHeight)
+                        else -> cropBitmap(rawBitmap, containerWidth, containerHeight, cropX, cropY)
                     }
-                    else -> { // "Crop"
-                        val paddingPx = (if (frameStyle == "Off") 0 else paddingDp) * density
-                        val innerWidth = targetWidth - 2 * paddingPx
-                        val innerHeight = targetHeight - 2 * paddingPx
-                        val cropped = if (innerWidth > 0 && innerHeight > 0) {
-                            cropBitmap(rawBitmap, innerWidth.toInt(), innerHeight.toInt(), cropX, cropY)
-                        } else {
-                            cropBitmap(rawBitmap, targetWidth, targetHeight, cropX, cropY)
-                        }
-                        android.util.Log.d("WidgetWorker", "Crop mode: rawBitmap=${rawBitmap.width}x${rawBitmap.height}, innerTarget=${innerWidth}x${innerHeight}, cropped=${cropped.width}x${cropped.height}, offsets=$cropX, $cropY")
-                        getRoundedCornerBitmap(cropped, radiusPx)
+
+                    // For Fill mode, match the frame size to the scaled image + padding, otherwise fill target bounds
+                    val frameWidth = if (fitStyle == "Fill") (innerImg.width + 2 * paddingPx).toInt() else targetWidth
+                    val frameHeight = if (fitStyle == "Fill") (innerImg.height + 2 * paddingPx).toInt() else targetHeight
+
+                    val output = Bitmap.createBitmap(frameWidth, frameHeight, Bitmap.Config.ARGB_8888)
+                    val canvas = Canvas(output)
+
+                    val bgPaint = Paint().apply {
+                        isAntiAlias = true
+                        color = frameColor
                     }
+                    canvas.drawRoundRect(RectF(0f, 0f, frameWidth.toFloat(), frameHeight.toFloat()), outerRadiusPx, outerRadiusPx, bgPaint)
+
+                    val roundedImage = getRoundedCornerBitmap(innerImg, innerRadiusPx)
+                    canvas.drawBitmap(roundedImage, paddingPx, paddingPx, null)
+                    output
                 }
 
                 // Save bitmap to a local file for persistence

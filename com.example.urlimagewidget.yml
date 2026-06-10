@@ -19,9 +19,9 @@ Description: |-
   * Feathered blur overlays to obscure background details with zero-halo edge blending.
 
 Builds:
-  - versionName: 1.0.1
-    versionCode: 2
-    commit: v1.0.1
+  - versionName: 1.0.2
+    versionCode: 3
+    commit: v1.0.2
     subdir: app
     gradle:
       - yes
