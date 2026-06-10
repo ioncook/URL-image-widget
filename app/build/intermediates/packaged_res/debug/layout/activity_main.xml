@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="32dp"
+    android:gravity="center"
+    android:background="#121212">
+
+    <ImageView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@android:drawable/ic_menu_gallery"
+        android:tint="#FFFFFF"
+        android:layout_marginBottom="24dp"
+        android:contentDescription="App Icon" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="URL Image Widget"
+        android:textColor="#FFFFFF"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="12dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="This is a home screen widget app! To set it up:\n\n1. Go to your home screen.\n2. Long press on an empty space.\n3. Choose 'Widgets' or 'Add Widget'.\n4. Search for 'URL Image Widget' and drag it to your screen."
+        android:textColor="#B3FFFFFF"
+        android:textSize="14sp"
+        android:lineSpacingMultiplier="1.3"
+        android:gravity="center" />
+</LinearLayout>

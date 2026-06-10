@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="#121212">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:gravity="center_horizontal">
+
+
+
+        <!-- Live Preview Title -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PREVIEW"
+            android:textColor="#55FFFFFF"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Preview Container -->
+        <FrameLayout
+            android:id="@+id/preview_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="24dp">
+
+            <!-- Mockup of the widget layout -->
+            <FrameLayout
+                android:id="@+id/preview_widget_frame"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:background="@drawable/widget_background"
+                android:clipChildren="true"
+                android:clipToOutline="true"
+                android:padding="8dp">
+
+                <ImageView
+                    android:id="@+id/preview_widget_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitXY"
+                    android:contentDescription="Preview Image"
+                    android:src="@drawable/placeholder_image" />
+            </FrameLayout>
+
+
+
+            <LinearLayout
+                android:id="@+id/preview_loading_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:visibility="gone">
+
+                <ProgressBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textColor="#FFFFFF"
+                    android:textSize="10sp"
+                    android:text="Loading Preview..." />
+            </LinearLayout>
+        </FrameLayout>
+
+        <!-- Form Container (Limited Width for Elegance) -->
+        <LinearLayout
+            android:layout_width="280dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="start">
+
+            <!-- Image URL Label & Input -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Image URL"
+                android:textColor="#B3FFFFFF"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp" />
+
+            <EditText
+                android:id="@+id/edit_text_url"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="https://example.com/image.jpg"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#55FFFFFF"
+                android:inputType="textUri"
+                android:backgroundTint="#FFFFFF"
+                android:textSize="14sp"
+                android:layout_marginBottom="8dp"
+                android:padding="8dp" />
+
+            <!-- Blur Elements Button -->
+            <Button
+                android:id="@+id/button_blur_elements"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Blur Elements"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#33FFFFFF"
+                android:layout_marginBottom="16dp"
+                android:visibility="gone"
+                android:padding="10dp" />
+
+            <!-- Update Interval Label & Input -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Update Interval (minutes)"
+                android:textColor="#B3FFFFFF"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp" />
+
+            <EditText
+                android:id="@+id/edit_text_interval"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="60 (min 15)"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#55FFFFFF"
+                android:inputType="number"
+                android:backgroundTint="#FFFFFF"
+                android:textSize="14sp"
+                android:layout_marginBottom="16dp"
+                android:padding="8dp" />
+
+            <!-- Image Fit Label & Spinner -->
+            <!-- Frame Label & Spinner -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Frame Style"
+                android:textColor="#B3FFFFFF"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp" />
+
+            <Spinner
+                android:id="@+id/spinner_frame"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#FFFFFF"
+                android:layout_marginBottom="16dp"
+                android:padding="8dp" />
+
+            <!-- Frame Thickness SeekBar -->
+            <LinearLayout
+                android:id="@+id/layout_frame_thickness"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:id="@+id/text_thickness_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Frame Thickness: 8dp"
+                    android:textColor="#B3FFFFFF"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="4dp" />
+
+                <SeekBar
+                    android:id="@+id/seek_bar_thickness"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:max="24"
+                    android:progress="8"
+                    android:thumbTint="#FFFFFF"
+                    android:progressTint="#FFFFFF" />
+            </LinearLayout>
+
+            <!-- Custom Color Layout -->
+            <LinearLayout
+                android:id="@+id/layout_custom_color"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Custom Frame Color"
+                    android:textColor="#B3FFFFFF"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="4dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <EditText
+                        android:id="@+id/edit_text_color"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="#FF5722"
+                        android:textColor="#FFFFFF"
+                        android:textColorHint="#55FFFFFF"
+                        android:inputType="none"
+                        android:focusable="false"
+                        android:clickable="true"
+                        android:backgroundTint="#FFFFFF"
+                        android:textSize="14sp"
+                        android:padding="8dp" />
+
+                    <View
+                        android:id="@+id/view_color_picker_trigger"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/circle_color_preview"
+                        android:clickable="true"
+                        android:focusable="true" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Image Fit Label & Spinner -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Image Fit"
+                android:textColor="#B3FFFFFF"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp" />
+
+            <Spinner
+                android:id="@+id/spinner_fit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#FFFFFF"
+                android:layout_marginBottom="16dp"
+                android:padding="8dp" />
+
+            <!-- Crop Adjuster Layout -->
+            <LinearLayout
+                android:id="@+id/layout_crop_adjuster"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Drag Crop Area"
+                    android:textColor="#B3FFFFFF"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="4dp" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="220dp"
+                    android:background="#1E1E1E">
+
+                    <ImageView
+                        android:id="@+id/preview_full_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:scaleType="fitCenter" />
+
+                    <com.example.urlimagewidget.CropOverlayView
+                        android:id="@+id/crop_overlay"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+                </FrameLayout>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/button_save"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Save Widget"
+                android:textColor="#121212"
+                android:backgroundTint="#FFFFFF"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="24dp"
+                android:padding="12dp" />
+
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

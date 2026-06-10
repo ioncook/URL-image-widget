@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/widget_background"
+    android:padding="8dp">
+
+    <!-- Inner container to apply rounded corners dynamically via clipToOutline -->
+    <FrameLayout
+        android:id="@+id/widget_image_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/widget_background"
+        android:clipToOutline="true"
+        android:clipChildren="true">
+
+        <!-- The Image View for Stretch style -->
+        <ImageView
+            android:id="@+id/widget_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:contentDescription="URL Image"
+            android:src="@drawable/placeholder_image" />
+
+        <!-- The Image View for Crop style -->
+        <ImageView
+            android:id="@+id/widget_image_crop"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:contentDescription="URL Image"
+            android:src="@drawable/placeholder_image"
+            android:visibility="gone" />
+
+        <!-- The Image View for Fill style -->
+        <ImageView
+            android:id="@+id/widget_image_fill"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitCenter"
+            android:contentDescription="URL Image"
+            android:src="@drawable/placeholder_image"
+            android:visibility="gone" />
+
+    </FrameLayout>
+
+    <!-- Overlay content to show loading state or error info -->
+    <LinearLayout
+        android:id="@+id/widget_loading_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:id="@+id/widget_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/widget_status_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="#FFFFFF"
+            android:textSize="10sp"
+            android:text="Loading..." />
+    </LinearLayout>
+
+    <!-- Tap target to trigger update (hidden overlay) -->
+    <FrameLayout
+        android:id="@+id/widget_tap_target"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent" />
+
+</FrameLayout>

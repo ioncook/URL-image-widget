@@ -1,0 +1,46 @@
+[
+    {
+        "merged": "/home/ionc/.gradle/daemon/8.5/com.example.urlimagewidget.app-merged_res-39:/drawable_widget_background.xml.flat",
+        "source": "/home/ionc/.gradle/daemon/8.5/com.example.urlimagewidget.app-main-41:/drawable/widget_background.xml"
+    },
+    {
+        "merged": "/home/ionc/.gradle/daemon/8.5/com.example.urlimagewidget.app-merged_res-39:/layout_activity_blur.xml.flat",
+        "source": "/home/ionc/.gradle/daemon/8.5/com.example.urlimagewidget.app-main-41:/layout/activity_blur.xml"
+    },
+    {
+        "merged": "/home/ionc/.gradle/daemon/8.5/com.example.urlimagewidget.app-merged_res-39:/layout_activity_main.xml.flat",
+        "source": "/home/ionc/.gradle/daemon/8.5/com.example.urlimagewidget.app-main-41:/layout/activity_main.xml"
+    },
+    {
+        "merged": "/home/ionc/.gradle/daemon/8.5/com.example.urlimagewidget.app-merged_res-39:/layout_widget_layout.xml.flat",
+        "source": "/home/ionc/.gradle/daemon/8.5/com.example.urlimagewidget.app-main-41:/layout/widget_layout.xml"
+    },
+    {
+        "merged": "/home/ionc/.gradle/daemon/8.5/com.example.urlimagewidget.app-merged_res-39:/drawable_placeholder_image.xml.flat",
+        "source": "/home/ionc/.gradle/daemon/8.5/com.example.urlimagewidget.app-main-41:/drawable/placeholder_image.xml"
+    },
+    {
+        "merged": "/home/ionc/.gradle/daemon/8.5/com.example.urlimagewidget.app-merged_res-39:/xml_image_widget_info.xml.flat",
+        "source": "/home/ionc/.gradle/daemon/8.5/com.example.urlimagewidget.app-main-41:/xml/image_widget_info.xml"
+    },
+    {
+        "merged": "/home/ionc/.gradle/daemon/8.5/com.example.urlimagewidget.app-merged_res-39:/layout_dialog_color_picker.xml.flat",
+        "source": "/home/ionc/.gradle/daemon/8.5/com.example.urlimagewidget.app-main-41:/layout/dialog_color_picker.xml"
+    },
+    {
+        "merged": "/home/ionc/.gradle/daemon/8.5/com.example.urlimagewidget.app-merged_res-39:/drawable_widget_inner_background.xml.flat",
+        "source": "/home/ionc/.gradle/daemon/8.5/com.example.urlimagewidget.app-main-41:/drawable/widget_inner_background.xml"
+    },
+    {
+        "merged": "/home/ionc/.gradle/daemon/8.5/com.example.urlimagewidget.app-merged_res-39:/layout_activity_configuration.xml.flat",
+        "source": "/home/ionc/.gradle/daemon/8.5/com.example.urlimagewidget.app-main-41:/layout/activity_configuration.xml"
+    },
+    {
+        "merged": "com.example.urlimagewidget.app-merged_res-39:/layout_activity_blur.xml.flat",
+        "source": "com.example.urlimagewidget.app-main-41:/layout/activity_blur.xml"
+    },
+    {
+        "merged": "/home/ionc/.gradle/daemon/8.5/com.example.urlimagewidget.app-merged_res-39:/drawable_circle_color_preview.xml.flat",
+        "source": "/home/ionc/.gradle/daemon/8.5/com.example.urlimagewidget.app-main-41:/drawable/circle_color_preview.xml"
+    }
+]
