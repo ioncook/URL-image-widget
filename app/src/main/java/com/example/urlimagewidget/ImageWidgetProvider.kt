@@ -31,6 +31,16 @@ open class ImageWidgetProvider : AppWidgetProvider() {
         newOptions: Bundle?
     ) {
         super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions)
+        if (newOptions == null || !newOptions.containsKey(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH)) {
+            return
+        }
+
+        val minWidth = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH, 0)
+        val minHeight = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT, 0)
+        if (minWidth < 40 || minHeight < 40) {
+            return
+        }
+
         val prefs = context.getSharedPreferences(
             WidgetConfigurationActivity.PREFS_NAME,
             Context.MODE_PRIVATE
@@ -62,11 +72,31 @@ open class ImageWidgetProvider : AppWidgetProvider() {
                 AppWidgetManager.INVALID_APPWIDGET_ID
             )
             if (appWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
-                // Retrieve URL and trigger refresh
                 val prefs = context.getSharedPreferences(
                     WidgetConfigurationActivity.PREFS_NAME,
                     Context.MODE_PRIVATE
                 )
+
+                // Resolve dimensions and update cache on user interaction if options are valid
+                val appWidgetManager = AppWidgetManager.getInstance(context)
+                val options = appWidgetManager.getAppWidgetOptions(appWidgetId)
+                if (options != null && options.containsKey(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH)) {
+                    val minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH, 0)
+                    val minHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT, 0)
+                    if (minWidth >= 40 && minHeight >= 40) {
+                        val resolvedSize = WidgetSizeResolver.resolveWidgetSize(options, context)
+                        val isLandscape = context.resources.displayMetrics.widthPixels > context.resources.displayMetrics.heightPixels
+                        prefs.edit().apply {
+                            putFloat(WidgetConfigurationActivity.PREF_WIDTH_DP_KEY + appWidgetId, resolvedSize.width)
+                            putFloat(WidgetConfigurationActivity.PREF_HEIGHT_DP_KEY + appWidgetId, resolvedSize.height)
+                            putInt(WidgetConfigurationActivity.PREF_COLS_KEY + appWidgetId, resolvedSize.cols)
+                            putInt(WidgetConfigurationActivity.PREF_ROWS_KEY + appWidgetId, resolvedSize.rows)
+                            putBoolean(WidgetConfigurationActivity.PREF_IS_LANDSCAPE_KEY + appWidgetId, isLandscape)
+                            apply()
+                        }
+                    }
+                }
+
                 val url = prefs.getString(WidgetConfigurationActivity.PREF_PREFIX_KEY + appWidgetId, null)
                 if (!url.isNullOrEmpty()) {
                     triggerWidgetUpdate(context, appWidgetId, url)
@@ -120,32 +150,6 @@ open class ImageWidgetProvider : AppWidgetProvider() {
                 WidgetConfigurationActivity.PREFS_NAME,
                 Context.MODE_PRIVATE
             )
-
-            // Resolve dynamic dimensions from options and update cache if changed
-            val options = appWidgetManager.getAppWidgetOptions(appWidgetId)
-            val resolvedSize = WidgetSizeResolver.resolveWidgetSize(options, context)
-            val storedWidth = prefs.getFloat(WidgetConfigurationActivity.PREF_WIDTH_DP_KEY + appWidgetId, -1f)
-            val storedHeight = prefs.getFloat(WidgetConfigurationActivity.PREF_HEIGHT_DP_KEY + appWidgetId, -1f)
-            val storedCols = prefs.getInt(WidgetConfigurationActivity.PREF_COLS_KEY + appWidgetId, -1)
-            val storedRows = prefs.getInt(WidgetConfigurationActivity.PREF_ROWS_KEY + appWidgetId, -1)
-            
-            if (storedWidth != resolvedSize.width || storedHeight != resolvedSize.height || storedCols != resolvedSize.cols || storedRows != resolvedSize.rows) {
-                android.util.Log.d("ImageWidgetProvider", "updateAppWidget: Size/grid changed. Saving and triggering update.")
-                val isLandscape = context.resources.displayMetrics.widthPixels > context.resources.displayMetrics.heightPixels
-                prefs.edit().apply {
-                    putFloat(WidgetConfigurationActivity.PREF_WIDTH_DP_KEY + appWidgetId, resolvedSize.width)
-                    putFloat(WidgetConfigurationActivity.PREF_HEIGHT_DP_KEY + appWidgetId, resolvedSize.height)
-                    putInt(WidgetConfigurationActivity.PREF_COLS_KEY + appWidgetId, resolvedSize.cols)
-                    putInt(WidgetConfigurationActivity.PREF_ROWS_KEY + appWidgetId, resolvedSize.rows)
-                    putBoolean(WidgetConfigurationActivity.PREF_IS_LANDSCAPE_KEY + appWidgetId, isLandscape)
-                    apply()
-                }
-                
-                val url = prefs.getString(WidgetConfigurationActivity.PREF_PREFIX_KEY + appWidgetId, null)
-                if (!url.isNullOrEmpty()) {
-                    triggerWidgetUpdate(context, appWidgetId, url)
-                }
-            }
 
             val views = RemoteViews(context.packageName, R.layout.widget_layout)
 
