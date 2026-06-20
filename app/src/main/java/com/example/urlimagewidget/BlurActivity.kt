@@ -122,6 +122,9 @@ class BlurActivity : AppCompatActivity() {
         Glide.with(this)
             .asBitmap()
             .load(imageUrl)
+            .signature(com.bumptech.glide.signature.ObjectKey(System.currentTimeMillis().toString()))
+            .skipMemoryCache(true)
+            .diskCacheStrategy(com.bumptech.glide.load.engine.DiskCacheStrategy.NONE)
             .into(object : CustomTarget<Bitmap>() {
                 override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                     loadingSpinner.visibility = View.GONE

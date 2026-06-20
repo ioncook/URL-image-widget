@@ -39,3 +39,10 @@ Builds:
     subdir: app
     gradle:
       - yes
+
+  - versionName: 1.0.5
+    versionCode: 6
+    commit: v1.0.5
+    subdir: app
+    gradle:
+      - yes

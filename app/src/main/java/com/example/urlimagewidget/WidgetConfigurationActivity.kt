@@ -587,6 +587,9 @@ class WidgetConfigurationActivity : AppCompatActivity() {
             previewLoading.visibility = View.VISIBLE
             Glide.with(this)
                 .load(url)
+                .signature(com.bumptech.glide.signature.ObjectKey(System.currentTimeMillis().toString()))
+                .skipMemoryCache(true)
+                .diskCacheStrategy(com.bumptech.glide.load.engine.DiskCacheStrategy.NONE)
                 .into(object : com.bumptech.glide.request.target.CustomTarget<Drawable>() {
                     override fun onResourceReady(
                         resource: Drawable,
