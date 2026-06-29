@@ -20,11 +20,33 @@ class ImageDownloadWorker(
 ) : CoroutineWorker(context, params) {
 
     override suspend fun doWork(): Result {
+        var isRetrying = false
         val widgetId = inputData.getInt(KEY_WIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
         val imageUrl = inputData.getString(KEY_IMAGE_URL)
 
         if (widgetId == AppWidgetManager.INVALID_APPWIDGET_ID || imageUrl.isNullOrEmpty()) {
             return Result.failure()
+        }
+
+        // Check network connection first
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as android.net.ConnectivityManager
+        val capabilities = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+        } else {
+            null
+        }
+        val isConnected = if (capabilities != null) {
+            capabilities.hasCapability(android.net.NetworkCapabilities.NET_CAPABILITY_INTERNET)
+        } else {
+            @Suppress("DEPRECATION")
+            val activeNetworkInfo = connectivityManager.activeNetworkInfo
+            @Suppress("DEPRECATION")
+            activeNetworkInfo != null && activeNetworkInfo.isConnected
+        }
+
+        if (!isConnected) {
+            isRetrying = true
+            return Result.retry()
         }
 
         val appWidgetManager = AppWidgetManager.getInstance(context)
@@ -178,11 +200,9 @@ class ImageDownloadWorker(
             showError(appWidgetManager, widgetId, views, "Error: ${e.message}")
             return Result.failure()
         } finally {
-            if (widgetId != AppWidgetManager.INVALID_APPWIDGET_ID && !imageUrl.isNullOrEmpty()) {
-                val appWidgetIds = appWidgetManager.getAppWidgetIds(
-                    android.content.ComponentName(context, ImageWidgetProvider::class.java)
-                )
-                if (widgetId in appWidgetIds) {
+            if (!isRetrying && widgetId != AppWidgetManager.INVALID_APPWIDGET_ID && !imageUrl.isNullOrEmpty()) {
+                val info = appWidgetManager.getAppWidgetInfo(widgetId)
+                if (info != null) {
                     val prefs = context.getSharedPreferences(
                         WidgetConfigurationActivity.PREFS_NAME,
                         Context.MODE_PRIVATE
